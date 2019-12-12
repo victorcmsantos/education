@@ -1,5 +1,5 @@
 from app import db
-from app.models import User, Role , Assignment
+from app.models import User, Role , UserRoles
 
 #def ls_users():
 #  #ls = 'ola'
@@ -32,7 +32,7 @@ def list_rules(user):
 def get_assig(user):
   assig = []
   u = User.query.filter_by(email=user).first()
-  from_f = Assignment.query.filter_by(user_id=u.id).all()
+  from_f = UserRoles.query.filter_by(user_id=u.id).all()
   for i in from_f:
     assig.append(Role.query.filter_by(id=i.role_id).first().type)
   return assig

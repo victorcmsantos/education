@@ -25,11 +25,13 @@ class Role(db.Model):
   def __repr__(self):
     return '<Role {}>'.format(self.name)
 
-class Assignment(db.Model):
+class UserRoles(db.Model):
   id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-  role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+#  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+#  role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+  user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+  role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
   def __repr__(self):
-    return '<Assignment {}>'.format(self.user_id)
+    return '<UserRoles {}>'.format(self.user_id)
 
 

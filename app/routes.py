@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 from app import app
 from app.forms import LoginForm
 from app.models import Role, User
@@ -20,10 +20,8 @@ url='http://127.0.0.1:81'
 @app.route('/index')
 def index():
   lst = ls_path('home')
-  user = {'username': 'Miguel'}
   return render_template('index.html', 
     title='Home', 
-    user=user, 
     files=lst, 
     url=url, 
     get_admin=get_admin, 
@@ -39,6 +37,10 @@ def login():
       flash('Invalid username or password')
       return redirect( "/login" )
     login_user(user, remember=form.remember_me.data)
+    #next_page = request.args.get('next')
+    #if not next_page or url_parse(next_page).netloc != '':
+    #  next_page = url_for('index')
+    #return redirect(next_page)
     return redirect('/index')
   return render_template( 'login.html', 
     title='login', 
@@ -58,21 +60,31 @@ def take_to_subpath(subpath_home):
   get_student=get_student )
 
 @app.route("/admin/<path:subpath_adm>", methods=['GET', 'POST'])
+@login_required
 def adm(subpath_adm):
   ls_adm = ls_path('admin')
   lst = ls_path('home')
-  return render_template('admin/%s.html' % (subpath_adm), 
-    title='%s' % (subpath_adm), 
-    fbase=ls_adm, 
-    files=lst, 
-    url=url, 
-    list_rules=list_rules, 
-    User=User, 
-    Role=Role, 
-    get_admin=get_admin, 
-    get_student=get_student )
+  if get_admin(current_user.email) == True:
+    return render_template('admin/%s.html' % (subpath_adm), 
+      title='%s' % (subpath_adm), 
+      fbase=ls_adm, 
+      files=lst, 
+      url=url, 
+      list_rules=list_rules, 
+      User=User, 
+      Role=Role, 
+      get_admin=get_admin, 
+      get_student=get_student )
+  else:
+    return render_template('errors_page/unauthorized.html',
+    title='unauthorized',
+    files=lst,
+    url=url,
+    get_admin=get_admin,
+    get_student=get_student)
 
 @app.route("/student/<path:subpath_myc>", methods=['GET', 'POST'])
+@login_required
 def student(subpath_myc):
   ls_std = ls_path('student')
   lst = ls_path('home')
