@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect
 from flask_login import current_user, login_user, logout_user, login_required
-from app import app
-from app.forms import LoginForm
+from app import app, db
+from app.forms import LoginForm, RegistrationForm
 from app.models import Role, User
 from app.mgmt_users import list_rules, get_admin, get_student
 import os
@@ -37,10 +37,6 @@ def login():
       flash('Invalid username or password')
       return redirect( "/login" )
     login_user(user, remember=form.remember_me.data)
-    #next_page = request.args.get('next')
-    #if not next_page or url_parse(next_page).netloc != '':
-    #  next_page = url_for('index')
-    #return redirect(next_page)
     return redirect('/index')
   return render_template( 'login.html', 
     title='login', 
@@ -49,6 +45,28 @@ def login():
     form=form, 
     get_admin=get_admin, 
     get_student=get_student)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+  lst = ls_path('home')
+  if current_user.is_authenticated:
+    return redirect('/index')
+  form = RegistrationForm()
+  if form.validate_on_submit():
+    user = User(username=form.username.data, email=form.email.data)
+    user.set_password(form.password.data)
+    db.session.add(user)
+    db.session.commit()
+    flash('Congratulations, you are now a registered user!')
+    return redirect('/login')
+  return render_template('register.html', 
+    title='Register', 
+    files=lst, 
+    form=form,
+    get_admin=get_admin, 
+    get_student=get_student)
+
+
 
 @app.route("/home/<path:subpath_home>")
 def take_to_subpath(subpath_home):
