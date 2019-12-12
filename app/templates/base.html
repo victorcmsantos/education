@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>DreamLearn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main3.css') }}">
+    {% if title %}
+    <title>{{ title }} - DreamLearn</title>
+    {% else %}
+    <title>Welcome to DreamLearn</title>
+    {% endif %}
+  </head>
+  <body>
+    {#<div class="navbar" ></div>#}
+    <div class="main">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+
+    <div style="width: fit-content; right: 0" class="navbar" >
+      {% if current_user.is_anonymous %}
+      <a href="{{url}}/login">Login</a>
+      {% else %}
+      <a href="{{url}}/logout">Logout</a>
+      {% endif %}
+      {% for i in files %}
+      <a href="{{url}}/home/{{ i|replace('.html','') }}">{{ i[0]|upper }}{{ i[1:]|replace('.html','') }}</a>
+      {% endfor %}
+      <a href="{{url}}/index">Home</a>
+      {% if get_admin(current_user.email) == True %}
+      <a href="{{url}}/admin/roles">Admin</a>
+      {% endif %}
+      
+    </div>
+
+
+    <div class="sidebar">
+    </div>
+  </body>
+</html>
+
