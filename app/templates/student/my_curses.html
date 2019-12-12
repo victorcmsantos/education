@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h2> The list of my curses will show here </h2>
+    
+
+    <div style="margin-left: -16px" class="navbar" >
+    {#<div style="width: fit-content; margin-left: -16px" class="navbar" > #}
+      {% for i in fbase %}
+      {% set i = i|replace('.html','') %}
+      {% set a = i|replace('_',' ') %}
+      <a style="float: left" href="{{url}}/student/{{ i }}">{{ a[0]|upper }}{{ a[1:] }}</a>
+      {% endfor %}
+    </div>
+
+{% endblock %}
+
+

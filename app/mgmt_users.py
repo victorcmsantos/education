@@ -46,4 +46,13 @@ def get_admin(user):
   except:
     is_admin = False
     return is_admin
-#  return is_admin
+
+def get_student(user):
+  try:
+    role_arry = get_assig(user)
+    if 'student' in role_arry:
+      is_admin = True
+      return is_admin
+  except:
+    is_admin = False
+    return is_admin

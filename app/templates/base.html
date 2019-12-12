@@ -9,7 +9,7 @@
     {% endif %}
   </head>
   <body>
-    {#<div class="navbar" ></div>#}
+    <div class="navbar" ></div>
     <div class="main">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -34,9 +34,11 @@
       {% endfor %}
       <a href="{{url}}/index">Home</a>
       {% if get_admin(current_user.email) == True %}
-      <a href="{{url}}/admin/roles">Admin</a>
+      <a style="background-color: #d83a3a"  href="{{url}}/admin/roles">Admin</a>
       {% endif %}
-      
+      {% if get_student(current_user.email) == True %}
+      <a style="background-color: #4197ca" href="{{url}}/student/my_curses">{{ current_user.username }}</a>
+      {% endif %}
     </div>
 
 
