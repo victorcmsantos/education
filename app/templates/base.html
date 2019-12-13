@@ -22,7 +22,6 @@
         {% endwith %}
       {% block content %}{% endblock %}
     </div>
-
     <div style="width: fit-content; right: 0" class="navbar" >
       {% if current_user.is_anonymous %}
       <a href="{{url}}/login">Login</a>
@@ -34,16 +33,29 @@
       {% endfor %}
       <a href="{{url}}/index">Home</a>
       {% if get_admin(current_user.email) == True %}
-      <a style="background-color: #d83a3a"  href="{{url}}/admin/roles">Admin</a>
+      <a style="background-color: #d83a3a; padding: 16px 16px"  href="{{url}}/admin/roles">Admin</a>
       {% endif %}
       {% if get_student(current_user.email) == True %}
-      <a style="background-color: #4197ca" href="{{url}}/student/my_curses">{{ current_user.username }}</a>
+      <a style="background-color: #4197ca; padding: 16px 16px" href="{{url}}/student/my_curses">{{ current_user.username }}</a>
+      {% endif %}
+      {% if get_tutor(current_user.email) == True %}
+      <a style="background-color: #d69623; padding: 4px 16px" href="{{url}}/tutor/my_classes">TUTOR<br>{{ current_user.username }}</a>
       {% endif %}
     </div>
-
-
     <div class="sidebar">
+      {% for c in Course.query.all() %}
+      {#% set a = i|replace('_',' ') %#}
+      <a href="{{url}}/courses/{{ c.name }}/presentation/index">
+        <div>
+         <p >{{ c.name }}</p>
+        </div>
+      </a>
+      {% endfor %}
     </div>
   </body>
 </html>
+
+
+
+
 

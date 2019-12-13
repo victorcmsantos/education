@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <div style="top: 15px" class="tablediv"> 
+    <h1>Register a new class</h1>
+    <form action="" method="post">
+      {{ form.hidden_tag() }}
+      <p>
+        {{ form.classname.label }}<br>
+        {{ form.classname(size=32) }}<br>
+        {% for error in form.classname.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <select name="select1" id="select1" >
+        <option value="None">Select Course</option>
+      {% for c in Course.query.all() %}
+        <option>{{ c.name }}</option>
+      {% endfor %}  
+      </select>
+      <p>{{ form.submit() }}</p>
+
+    </form>
+  </div>
+
+  <div style="margin-left: -16px" class="navbar" >
+    {% for i in fbase %}
+    {% set i = i|replace('.html','') %}
+    {% set a = i|replace('_',' ') %}
+    <a style="float: left" href="{{url}}/tutor/{{ i }}">{{ a[0]|upper }}{{ a[1:] }}</a>
+    {% endfor %}
+  </div>
+{% endblock %}
+

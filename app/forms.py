@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app.models import Role, User
+from app.models import Role, User, Classe, Course
 from app import db
-
 
 class LoginForm(FlaskForm):
   username = StringField('Usarname', validators=[DataRequired()])
@@ -28,4 +27,16 @@ class RegistrationForm(FlaskForm):
     user = User.query.filter_by(email=email.data).first()
     if user is not None:
       raise ValidationError('Please use a different email address.')
+
+class RegistrationFormClass(FlaskForm):
+  classname = StringField('Classname', validators=[DataRequired()])
+  submit = SubmitField('RegistrationFormClass')
+  def validate_classname(self, classname):
+    find_class = Classe.query.filter_by(name=classname.data).first()
+    if find_class is not None:
+      raise ValidationError('Please use a different classname.')
+
+
+
+
 

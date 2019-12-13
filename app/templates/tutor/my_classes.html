@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+  <div style="position: relative; width: fit-content; height: fit-content; float: right" class="navbar" >
+    <a href="{{url}}/add_class">Add Class</a>
+  </div>
+    
+
+  <div style="margin-left: -16px" class="navbar" >
+  {#<div style="width: fit-content; margin-left: -16px" class="navbar" > #}
+    {% for i in fbase %}
+    {% set i = i|replace('.html','') %}
+    {% set a = i|replace('_',' ') %}
+    <a style="float: left" href="{{url}}/tutor/{{ i }}">{{ a[0]|upper }}{{ a[1:] }}</a>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+
+

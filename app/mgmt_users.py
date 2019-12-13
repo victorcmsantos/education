@@ -1,5 +1,5 @@
 from app import db
-from app.models import User, Role , UserRoles
+from app.models import User, Role , UserRoles, Course, Classe
 
 #def ls_users():
 #  #ls = 'ola'
@@ -20,6 +20,14 @@ from app.models import User, Role , UserRoles
 #  for r in Role.query.all():
 #    roles.append({r.name: r.type})
 #  return roles
+
+def list_curses():
+  curses_arry = Course.query.all()
+  new_array = []
+  for i in Course.query.all():
+    new_array.append(str(i.name))
+  #new_array = ','.join(new_array)
+  return new_array
 
 def list_rules(user):
   roles_arry = get_assig(user)
@@ -56,3 +64,20 @@ def get_student(user):
   except:
     is_admin = False
     return is_admin
+
+def get_tutor(user):
+  try:
+    role_arry = get_assig(user)
+    if 'tutor' in role_arry:
+      is_admin = True
+      return is_admin
+  except:
+    is_admin = False
+    return is_admin
+
+
+
+
+
+
+

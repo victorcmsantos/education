@@ -27,11 +27,25 @@ class Role(db.Model):
 
 class UserRoles(db.Model):
   id = db.Column(db.Integer, primary_key=True)
-#  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#  role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
   user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
   role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
   def __repr__(self):
     return '<UserRoles {}>'.format(self.user_id)
+
+class Course(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(140), index=True, unique=True)
+  def __repr__(self):
+    return '<Course {}>'.format(self.name)
+
+class Classe(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(140), index=True, unique=True)
+  course_id = db.Column(db.Integer(), db.ForeignKey('course.id', ondelete='CASCADE'))
+  def __repr__(self):
+    return '<Classe {}>'.format(self.name)
+
+
+
 
 
