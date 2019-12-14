@@ -1,9 +1,9 @@
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, RegistrationFormClass
 from app.models import Role, User, UserRoles, Course, Classe
-from app.mgmt_users import list_rules, get_admin, get_student, get_tutor
+from app.mgmt_users import list_rules, get_admin, get_student, get_tutor, get_course_id
 import os
 
 def ls_path(path):
@@ -143,8 +143,8 @@ def add_class():
     get_student=get_student)
   form = RegistrationFormClass()
   if form.validate_on_submit():
-    selectValue = request.form.get('select1')
-    add_class = Classe(name=form.classname.data, course_id=selectValue)
+    selectValue = get_course_id(request.form.get('select1'))
+    add_class = Classe(name=form.classname.data, course_id=selectValue, tutor_id=current_user.id )
     db.session.add(add_class)
     db.session.commit()
 
@@ -250,6 +250,7 @@ def tutor(subpath_tutor):
     fbase=ls_std, 
     files=lst, url=url, 
     Course=Course,
+    Classe=Classe,
     User=User, 
     Role=Role, 
     get_admin=get_admin, 

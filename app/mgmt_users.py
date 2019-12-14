@@ -21,13 +21,9 @@ from app.models import User, Role , UserRoles, Course, Classe
 #    roles.append({r.name: r.type})
 #  return roles
 
-def list_curses():
-  curses_arry = Course.query.all()
-  new_array = []
-  for i in Course.query.all():
-    new_array.append(str(i.name))
-  #new_array = ','.join(new_array)
-  return new_array
+def get_course_id(name):
+  result = Course.query.filter_by(name=name).first().id
+  return result
 
 def list_rules(user):
   roles_arry = get_assig(user)

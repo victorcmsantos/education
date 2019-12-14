@@ -13,7 +13,7 @@
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
       </p>
-      <select name="select1" id="select1" >
+      <select name="select1" id="select1" action="">
         <option value="None">Select Course</option>
       {% for c in Course.query.all() %}
         <option>{{ c.name }}</option>

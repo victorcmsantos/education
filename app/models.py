@@ -42,8 +42,13 @@ class Classe(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(140), index=True, unique=True)
   course_id = db.Column(db.Integer(), db.ForeignKey('course.id', ondelete='CASCADE'))
+  tutor_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
   def __repr__(self):
     return '<Classe {}>'.format(self.name)
+
+
+
+
 
 
 
