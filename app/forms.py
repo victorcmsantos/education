@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import Role, User, Classe, Course
 from app import db
 
@@ -36,6 +36,9 @@ class RegistrationFormClass(FlaskForm):
     if find_class is not None:
       raise ValidationError('Please use a different classname.')
 
+class MyForm(FlaskForm):
+	country = StringField('Country', validators=[DataRequired(),
+	Length(max=40)],render_kw={"placeholder": "email"})
 
 
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <div style="position: relative; width: fit-content; height: fit-content; float: right" class="navbar" >
-    <a href="{{url}}/add_user_class">Add User to Class</a>
+    <a href="{{url}}/classes/{{class_id}}/add_user_class">Add User to Class</a>
   </div>
   <div style="margin-top: 56px; margin-left: 40"> 
     <h2> The Class - "{{ get_classe_name(class_id) }}"</h2>
