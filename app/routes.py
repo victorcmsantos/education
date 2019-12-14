@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, RegistrationFormClass
 from app.models import Role, User, UserRoles, Course, Classe
-from app.mgmt_users import list_rules, get_admin, get_student, get_tutor, get_course_id
+from app.mgmt_users import list_rules, get_admin, get_student, get_tutor, get_course_id, get_classe_name, get_course_name
 import os
 
 def ls_path(path):
@@ -89,13 +89,13 @@ def add_user():
   lst = ls_path('home')
   if not get_admin(current_user.email) == True:
     return render_template('errors_page/unauthorized.html',
-    title='unauthorized',
-    files=lst,
-    Course=Course,
-    url=url,
-    get_admin=get_admin,
-    get_tutor=get_tutor, 
-    get_student=get_student)
+      title='unauthorized',
+      files=lst,
+      Course=Course,
+      url=url,
+      get_admin=get_admin,
+      get_tutor=get_tutor, 
+      get_student=get_student)
   form = RegistrationForm()
   if form.validate_on_submit():
     user = User(username=form.username.data, email=form.email.data)
@@ -122,11 +122,6 @@ def add_user():
     get_tutor=get_tutor, 
     get_student=get_student)
 
-
-
-
-
-
 @app.route('/add_class', methods=['GET', 'POST'])
 @login_required
 def add_class():
@@ -147,12 +142,6 @@ def add_class():
     add_class = Classe(name=form.classname.data, course_id=selectValue, tutor_id=current_user.id )
     db.session.add(add_class)
     db.session.commit()
-
-    #u = User.query.filter_by(email=form.email.data).first().id
-    #r = Role.query.filter_by(type='tutor').first().id
-    #a = UserRoles(user_id=u, role_id=r)
-    #db.session.add(a)
-    #db.session.commit()
     flash('Congratulations, registered a new Class!')
     return redirect('/add_class')
   return render_template('add_class.html', 
@@ -169,8 +158,30 @@ def add_class():
     get_tutor=get_tutor, 
     get_student=get_student)
 
-
-
+@app.route("/classes/<int:class_id>/index")
+def class_id(class_id):
+  lst = ls_path('home')
+  ls_std = ls_path('tutor')
+  if not current_user.id == Classe.query.filter_by(id=class_id).first().tutor_id:
+    return render_template('errors_page/unauthorized.html',
+      title='unauthorized',
+      files=lst,
+      Course=Course,
+      url=url,
+      get_admin=get_admin,
+      get_tutor=get_tutor, 
+      get_student=get_student)
+  return render_template('classes/index.html', 
+    title='classe %s' % (class_id), 
+    files=lst,
+    Course=Course,
+    fbase=ls_std, 
+    class_id=class_id,
+    url=url, 
+    get_classe_name=get_classe_name,
+    get_admin=get_admin, 
+    get_tutor=get_tutor, 
+    get_student=get_student )
 
 
 
@@ -253,6 +264,7 @@ def tutor(subpath_tutor):
     Classe=Classe,
     User=User, 
     Role=Role, 
+    get_course_name=get_course_name,
     get_admin=get_admin, 
     get_tutor=get_tutor, 
     get_student=get_student)

@@ -46,6 +46,13 @@ class Classe(db.Model):
   def __repr__(self):
     return '<Classe {}>'.format(self.name)
 
+class Enrolled(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+  classe_id = db.Column(db.Integer(), db.ForeignKey('classe.id', ondelete='CASCADE'))
+  def __repr__(self):
+    return '<Enrolled {}>'.format(self.id)
+
 
 
 

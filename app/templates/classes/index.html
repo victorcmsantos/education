@@ -1,25 +1,23 @@
 {% extends "base.html" %}
-
-
 {% block content %}
   <div style="position: relative; width: fit-content; height: fit-content; float: right" class="navbar" >
-    <a href="{{url}}/add_class">Add Class</a>
+    <a href="{{url}}/add_user_class">Add User to Class</a>
   </div>
-    
+  <div style="margin-top: 56px; margin-left: 40"> 
+    <h2> The Class - "{{ get_classe_name(class_id) }}"</h2>
+  </div>
+
   <div style="top: 15px" class="tablediv"> 
     <table>
-    <tr>
-      <th>ID</th>
-      <th>Classe</th>
-      <th>Course</th>
-    </tr>
-      {% for c in Classe.query.filter_by(tutor_id=current_user.id) %}
-    <tr>
-        <td><a  href="{{url}}/classes/{{c.id}}/index">{{ c.id }}</a></td>
-        <td><a  href="{{url}}/classes/{{c.id}}/index">{{ c.name }}</a></td>
-        <td> {{ get_course_name(c.course_id) }}</td>
-    </tr>
-      {% endfor %}
+      <tr>
+        <th>Students</th>
+      </tr>
+        {#% for r in Role.query.all() %}
+      <tr>
+        <td>{{ r.name }}</td>
+        <td>{{ r.type }}</td>
+      </tr>
+        {% endfor %#}
     </table>
   </div>
 
@@ -30,7 +28,4 @@
     <a style="float: left" href="{{url}}/tutor/{{ i }}">{{ a[0]|upper }}{{ a[1:] }}</a>
     {% endfor %}
   </div>
-
 {% endblock %}
-
-

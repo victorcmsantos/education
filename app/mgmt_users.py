@@ -21,6 +21,14 @@ from app.models import User, Role , UserRoles, Course, Classe
 #    roles.append({r.name: r.type})
 #  return roles
 
+def get_course_name(id):
+  result = Course.query.filter_by(id=id).first().name
+  return result
+
+def get_classe_name(id):
+  result = Classe.query.filter_by(id=id).first().name
+  return result
+
 def get_course_id(name):
   result = Course.query.filter_by(name=name).first().id
   return result
