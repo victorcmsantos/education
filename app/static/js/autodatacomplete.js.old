@@ -1,0 +1,26 @@
+$(function() {
+
+  var emails=[];
+  var availableTutorials = [ "ActionScript", "Boostrap", "C", "C++", ];
+
+  function emailrarry(){
+    var myjson;
+    $.getJSON("/countries", function(json){
+      myjson = json;
+    });
+    
+    var result = [];
+    for(var i in myjson) {
+      result.push([i, myjson[i]]);
+    };
+  };
+
+  emailrarry();
+
+
+  $( "#autocplt" ).autocomplete({
+    source: emailrarry,
+  });
+
+});
+

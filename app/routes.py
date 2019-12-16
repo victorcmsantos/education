@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, RegistrationFormClass, MyForm
-from app.models import Role, User, UserRoles, Course, Classe
+from app.models import Role, User, UserRoles, Course, Classe, Enrolled
 from app.mgmt_users import list_rules, get_admin, get_student, get_tutor, get_course_id, get_classe_name, get_course_name
 import os
 
@@ -175,6 +175,8 @@ def class_id(class_id):
     title='classe %s' % (class_id), 
     files=lst,
     Course=Course,
+    User=User,
+    Enrolled=Enrolled,
     fbase=ls_std, 
     class_id=class_id,
     url=url, 
@@ -183,11 +185,10 @@ def class_id(class_id):
     get_tutor=get_tutor, 
     get_student=get_student )
 
-@app.route("/classes/<int:class_id>/add_user_class")
+@app.route("/classes/<int:class_id>/add_user_class" , methods=['GET', 'POST'])
 def add_user_class(class_id):
   lst = ls_path('home')
   ls_std = ls_path('tutor')
-  form = MyForm()
   if not current_user.id == Classe.query.filter_by(id=class_id).first().tutor_id:
     return render_template('errors_page/unauthorized.html',
       title='unauthorized',
@@ -197,10 +198,20 @@ def add_user_class(class_id):
       get_admin=get_admin,
       get_tutor=get_tutor, 
       get_student=get_student)
+  form = MyForm()
+  if form.validate_on_submit():
+    user = User.query.filter_by(email=form.autocplt.data).first().id
+    add_user = Enrolled(user_id=user, classe_id=class_id)
+    db.session.add(add_user)
+    db.session.commit()
+    flash('Congratulations, user Enrolled into a Class!')
+    return redirect('/classes/%s/add_user_class' % class_id)
   return render_template('classes/add_user_class.html', 
     title='classe %s' % (class_id), 
     files=lst,
     Course=Course,
+    User=User,
+    Enrolled=Enrolled,
     fbase=ls_std, 
     class_id=class_id,
     url=url, 
@@ -211,14 +222,34 @@ def add_user_class(class_id):
     get_student=get_student )
 
 
+@app.route('/search/', methods=['GET'])
+def search():
+	r = request.args['q']
+	schools = User.query.with_entities(User.username, User.email).filter(User.email.ilike('%' + r + '%')).all()
+	data = [{'username': i[0], 'email': i[1]} for i in schools]
+	return jsonify(results=data)
+
+
 @app.route('/countries')
 def countrydic():
 	res = User.query.all()
 	list_countries = [r.as_dict() for r in res]
 	return jsonify(list_countries)
 
+#@app.route('/autocomplete', methods=['GET'])
+#def autocomplete():
+#    search = request.args.get('q')
+#    query = db_session.query(Movie.title).filter(Movie.title.like('%' + str(search) + '%'))
+#    results = [mv[0] for mv in query.all()]
+#    return jsonify(matching_results=results)
 
-
+#
+#@app.route('/countries')
+#def countrydic():
+#  tag = request.form["q"]
+#  search = "%{}%".format(tag)
+#  result = User.query.filter(Post.tags.like(search)).all()
+#  return jsonify(matching_results=results)
 
 
 
@@ -276,7 +307,9 @@ def student(subpath_myc):
     title='%s' % (subpath_myc), 
     fbase=ls_std, 
     files=lst, 
+    Enrolled=Enrolled,
     Course=Course,
+    Classe=Classe,
     url=url, 
     User=User, 
     Role=Role, 

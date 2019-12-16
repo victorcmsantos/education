@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Add students:</h1>
+
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
+<script>
+$(function(){
+	function link_to(message) {
+	  //This is where you will go when you select an item from the dropdown.
+	  var link = '/schools/' + message + '/';
+	  window.location.href = link;
+	}
+		$('#autocplt').focus(function(){
+			$(this).val('');
+		})
+		$("#autocplt").autocomplete({
+			source: function(request, response){
+				$.ajax({
+					url: "/search/",
+					dataType: "json",
+					data: {
+						q: request.term
+					},
+					success: function(data) {
+						response($.map(data['results'], function(item){
+							return {value: item.email, label: item.username};
+						}))
+					}
+				});
+			},
+			minLength: 2,
+			focus: function(event, ui){
+				event.preventDefault();
+				$(this).val(ui.item.label);
+			},
+			select: function( event, ui ) {
+			  event.preventDefault();
+			  link_to(ui.item.value);
+			}
+		});
+	});
+</script>
+
+
+  <div style="top: 15px" class="tablediv"> 
+    <form action="" method="post">
+    	    {{form.autocplt}}
+      <button type="submit" class="btn btn-info">Submit</button>
+    </form>
+  </div>
+
+
+{#
+<script>
+$.getJSON( "/countries", function( data ) {
+  var items = [];
+  $.each( data, function( key, val ) {
+    items.push( "<li id='" + key + "'>" + val + "</li>" );
+  });
+  $( "<ul/>", {
+    "class": "my-new-list",
+    html: items.join( "" )
+  }).appendTo( "body" );
+});
+#}
+
+
+
+</script>
+
+
+  <div style="margin-left: -16px" class="navbar" >
+    {% for i in fbase %}
+    {% set i = i|replace('.html','') %}
+    {% set a = i|replace('_',' ') %}
+    <a style="float: left" href="{{url}}/admin/{{ i }}">{{ a[0]|upper }}{{ a[1:] }}</a>
+    {% endfor %}
+  </div>
+
+
+
+
+
+
+
+{% endblock %}
+

@@ -3,6 +3,25 @@
 
 {% block content %}
     <h2> The list of my curses will show here </h2>
+
+
+  <div style="top: 35px" class="tablediv"> 
+    <table>
+      <tr>
+        <th>Classes</th>
+        <th>Course</th>
+        <th>Tutor</th>
+      </tr>
+        {% for e in Enrolled.query.filter_by(user_id=current_user.id).all() %}
+      <tr>
+        <td>{{ Classe.query.filter_by(id=e.classe_id).first().name }}</td>
+        <td>{{ Course.query.filter_by(id=Classe.query.filter_by(id=e.classe_id).first().course_id).first().name }}</td>
+        <td>{{ User.query.filter_by( id=Classe.query.filter_by(id=e.classe_id).first().tutor_id).first().username  }}</td>
+      </tr>
+        {% endfor %}
+    </table>
+  </div>
+
     
 
     <div style="margin-left: -16px" class="navbar" >

@@ -1,5 +1,6 @@
 
-jQuery(document).ready(function($){
+$(document).ready(function(){
+
 var countries=[];
 
 function loadCountries(){

@@ -10,14 +10,17 @@
   <div style="top: 15px" class="tablediv"> 
     <table>
       <tr>
+        <th>ID</th>
         <th>Students</th>
+        <th>Email</th>
       </tr>
-        {#% for r in Role.query.all() %}
+        {% for e in Enrolled.query.filter_by(classe_id=class_id).all() %}
       <tr>
-        <td>{{ r.name }}</td>
-        <td>{{ r.type }}</td>
+        <td>{{ e.user_id }}</td>
+        <td>{{ User.query.filter_by(id=e.user_id).first().username }}</td>
+        <td>{{ User.query.filter_by(id=e.user_id).first().email }}</td>
       </tr>
-        {% endfor %#}
+        {% endfor %}
     </table>
   </div>
 

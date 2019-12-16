@@ -4,6 +4,11 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Le
 from app.models import Role, User, Classe, Course
 from app import db
 
+class MyForm(FlaskForm):
+  autocplt = StringField('Email', validators=[DataRequired()],render_kw={"placeholder": "email"})
+  submit = SubmitField('Add User')
+	#autocplt = StringField('Email', validators=[DataRequired(),Length(max=40)],render_kw={"placeholder": "email"})
+
 class LoginForm(FlaskForm):
   username = StringField('Usarname', validators=[DataRequired()])
   password = PasswordField('Password', validators=[DataRequired()])
@@ -30,15 +35,12 @@ class RegistrationForm(FlaskForm):
 
 class RegistrationFormClass(FlaskForm):
   classname = StringField('Classname', validators=[DataRequired()])
-  submit = SubmitField('RegistrationFormClass')
+  submit = SubmitField('Create Class')
   def validate_classname(self, classname):
     find_class = Classe.query.filter_by(name=classname.data).first()
     if find_class is not None:
       raise ValidationError('Please use a different classname.')
 
-class MyForm(FlaskForm):
-	country = StringField('Country', validators=[DataRequired(),
-	Length(max=40)],render_kw={"placeholder": "email"})
 
 
 

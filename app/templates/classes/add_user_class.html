@@ -3,35 +3,71 @@
 {% block content %}
 
 
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"/>
 
-  <h1>Add students:</h1>
+<script>
+$(function(){
+  function link_to(message) {
+    var link = '127.0.0.1:5000/schools/' + message + '/';
+    window.location.href = link;
+  }
+  $('#input').focus(function(){
+  	$(this).val('');
+  })
+	$("#autocplt").autocomplete({
+		source: function(request, response){
+			$.ajax({ url: "/search/", dataType: "json", data: { q: request.term },
+				success: function(data) {
+					response($.map(data['results'], function(item){
+						return {value: item.email, label: item.email};
+					}))
+				}
+			});
+		},
+		minLength: 2,
+    focus: function(event, ui){
+    	event.preventDefault();
+    	$(this).val(ui.item.label);
+    }
+	});
+});
+</script>
 
-
-    <form class="form-inline" >
-    	{#{ form.csrf_token }#}
-    	<div class="form-group">
-    	    {{form.country}}
-    	  </div>
-    	  <button type="submit" class="btn btn-info">Submit</button>
+  <div style="top: 15px" class="tablediv"> 
+    <h1>Add students:</h1>
+    <form action="" method="post">
+      {{ form.hidden_tag() }}
+      <p>{{ form.autocplt }}</p>
+      <p>{{ form.submit() }}</p>
     </form>
+  </div>
 
-
-
-
+  <div style="top: 35px" class="tablediv"> 
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Students</th>
+        <th>Email</th>
+      </tr>
+        {% for e in Enrolled.query.filter_by(classe_id=class_id).all() %}
+      <tr>
+        <td>{{ e.user_id }}</td>
+        <td>{{ User.query.filter_by(id=e.user_id).first().username }}</td>
+        <td>{{ User.query.filter_by(id=e.user_id).first().email }}</td>
+      </tr>
+        {% endfor %}
+    </table>
+  </div>
 
   <div style="margin-left: -16px" class="navbar" >
     {% for i in fbase %}
     {% set i = i|replace('.html','') %}
     {% set a = i|replace('_',' ') %}
-    <a style="float: left" href="{{url}}/admin/{{ i }}">{{ a[0]|upper }}{{ a[1:] }}</a>
+    <a style="float: left" href="{{url}}/tutor/{{ i }}">{{ a[0]|upper }}{{ a[1:] }}</a>
     {% endfor %}
   </div>
-
-
-
-
-
-
 
 {% endblock %}
 
