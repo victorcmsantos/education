@@ -11,7 +11,8 @@ def ls_path(path):
   return lst
 
 www_path = '/var/www/html3/app/templates/'
-url='http://127.0.0.1:81'
+url='http://blackdrama.victorsantos.net/'
+#url='http://127.0.0.1:81'
 
 @app.route('/')
 @app.route('/index')
